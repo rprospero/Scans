@@ -35,7 +35,7 @@ class Larmor(Defaults):
     def detector(**kwargs):
         g.begin()
         g.waitfor(**kwargs)
-        temp = sum(g.get_spectrum(4)["signal"])
+        temp = sum(g.get_spectrum(4)["signal"])*100
         g.abort()
         return temp
 

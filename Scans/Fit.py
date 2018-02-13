@@ -252,6 +252,40 @@ class ErrorFit(CurveFit):
                     background=(params["right"]+params["left"])/2,
                     **params)
 
+class TrapezoidFit(CurveFit):
+    """
+    A fitting class for the error function
+    """
+    def __init__(self):
+        CurveFit.__init__(self, 6, "Trapezoid Fit")
+
+    @staticmethod
+    # pylint: disable=arguments-differ
+    def _model(xs, center, width, bottom_width, top, bottom):
+        from scipy.special import erf  # pylint: disable=no-name-in-module
+        ys = np.copy(xs) * 8
+        ys[np.abs(xs-center) < width/2] = top
+        ys[np.abs(xs-center) < bottom_width/2] = bottom
+        mask = np.logical_or(np.abs(xs-center) < width/2, np.abs(xs-center) < bottom_width/2)
+        mask = np.logical_not(mask)
+        dist = (2*np.abs(xs[mask]-center)-width)/(bottom_width-width)
+        ys[mask] = bottom * dist + top * (1-dist)
+        return ys
+
+    @staticmethod
+    def guess(x, y):
+        cen = len(x)//2
+        return [x[cen], np.abs(x[-1]-x[0])/3, 2*np.abs(x[-1]-x[0])/3, y[cen], (y[0]+y[-1])/2]
+
+    def readable(self, fit):
+        return {"center": fit[0], "FWHM": (fit[1]+fit[2])/2,
+                "signal": fit[3], "background": fit[4]}
+
+    def title(self, params):
+        # pylint: disable=arguments-differ
+        params = self.readable(params)
+        return self._title + ": " + "Center @ {center:.3g}".format(**params)
+
 
 class DampedOscillatorFit(CurveFit):
     """
@@ -304,6 +338,7 @@ Linear = PolyFit(1, title="Linear")
 
 #: A gaussian fit
 Gaussian = GaussianFit()
+Trapezoid = TrapezoidFit()
 
 DampedOscillator = DampedOscillatorFit()
 
