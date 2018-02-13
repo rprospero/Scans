@@ -145,8 +145,9 @@ class Scan(object):
                     axis.set_ylim(rng[0], rng[1])
                     ys.plot(axis, xs)
                     if action:
-                        action_remainder = action(xs, ys,
-                                                  axis)
+                        temp = action(xs, ys, axis)
+                        if temp is not None:
+                            action_remainder = temp
         except KeyboardInterrupt:
             pass
         if save:
