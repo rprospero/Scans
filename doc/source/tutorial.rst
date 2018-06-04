@@ -84,7 +84,7 @@ Plot Motor Scan
   0.3.
 
   >>> from Scans import *
-  >>> scan(THETA, start=0, stop=2, stride=0.6).plot(seconds=1)
+  >>> scan(theta, start=0, stop=2, stride=0.6).plot(seconds=1)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.50 and two theta=0.00
   Taking a count at theta=1.00 and two theta=0.00
@@ -119,17 +119,17 @@ Plot Motor Scan
   ``gaps`` allow the user to specify the number of measurements and the
   number of gaps, respectively.
 
-  >>> scan(THETA, start=0, stop=2, step=0.6).plot(frames=5)
+  >>> scan(theta, start=0, stop=2, step=0.6).plot(frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.60 and two theta=0.00
   Taking a count at theta=1.20 and two theta=0.00
   Taking a count at theta=1.80 and two theta=0.00
-  >>> scan(THETA, start=0, stop=2, count=4).plot(frames=5)
+  >>> scan(theta, start=0, stop=2, count=4).plot(frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.67 and two theta=0.00
   Taking a count at theta=1.33 and two theta=0.00
   Taking a count at theta=2.00 and two theta=0.00
-  >>> scan(THETA, start=0, stop=2, gaps=4).plot(frames=5)
+  >>> scan(theta, start=0, stop=2, gaps=4).plot(frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.50 and two theta=0.00
   Taking a count at theta=1.00 and two theta=0.00
@@ -139,13 +139,13 @@ Plot Motor Scan
   The user also has the option of fixing the steps size and number of
   measurements or gaps while leaving the ending position open.
 
-  >>> scan(THETA, start=0, step=0.6, count=5).plot(frames=5)
+  >>> scan(theta, start=0, step=0.6, count=5).plot(frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.60 and two theta=0.00
   Taking a count at theta=1.20 and two theta=0.00
   Taking a count at theta=1.80 and two theta=0.00
   Taking a count at theta=2.40 and two theta=0.00
-  >>> scan(THETA, start=0, stride=0.6, gaps=5).plot(frames=5)
+  >>> scan(theta, start=0, stride=0.6, gaps=5).plot(frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.60 and two theta=0.00
   Taking a count at theta=1.20 and two theta=0.00
@@ -156,7 +156,7 @@ Plot Motor Scan
   For when relative scans make more sense, it's possible to request
   them by replacing beign and end with before and after.
 
-  >>> scan(THETA, before=-1, after=1, stride=0.6).plot(frames=5)
+  >>> scan(theta, before=-1, after=1, stride=0.6).plot(frames=5)
   Taking a count at theta=2.00 and two theta=0.00
   Taking a count at theta=2.50 and two theta=0.00
   Taking a count at theta=3.00 and two theta=0.00
@@ -167,13 +167,13 @@ Plot Motor Scan
   properties.  Scans that attempt to exceed these values will throw an
   error.
 
-  >>> THETA.low = 0
-  >>> THETA.high = 2
-  >>> scan(THETA, start=0, stop=10, count=21)
+  >>> theta.low = 0
+  >>> theta.high = 2
+  >>> scan(theta, start=0, stop=10, count=21)
   Traceback (most recent call last):
       ...
   RuntimeError: Position 2.5 is above upper limit 2 of motor theta
-  >>> THETA.high = None
+  >>> theta.high = None
 
   If there is no Motion object for a specific axis, the user can give
   the name in a string and use that.  If the axis isn't a string or a
@@ -197,7 +197,7 @@ Perform Fits
   Performing a fit on a measurement is merely a modification of
   performing the plot
 
-  >>> fit = scan(THETA, start=0, stop=2, stride=0.6).fit(Linear, frames=5)
+  >>> fit = scan(theta, start=0, stop=2, stride=0.6).fit(Linear, frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.50 and two theta=0.00
   Taking a count at theta=1.00 and two theta=0.00
@@ -214,7 +214,7 @@ Perform Fits
 
   We can also plot the same scan against a Gaussian
 
-  >>> fit = scan(THETA, start=0, stop=2, count=11).fit(Gaussian, frames=5)
+  >>> fit = scan(theta, start=0, stop=2, count=11).fit(Gaussian, frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.20 and two theta=0.00
   Taking a count at theta=0.40 and two theta=0.00
@@ -234,7 +234,7 @@ Perform Fits
   to refine that point.  The width of that neighbourhood is the
   parameter to PeakFit.
 
-  >>> fit = scan(THETA, start=0, stop=2, count=11).fit(PeakFit(0.7), frames=5)
+  >>> fit = scan(theta, start=0, stop=2, count=11).fit(PeakFit(0.7), frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.20 and two theta=0.00
   Taking a count at theta=0.40 and two theta=0.00
@@ -261,8 +261,8 @@ Perform complex scans
   To start with, a user may want to scan theta and two theta together in
   lock step.
 
-  >>> th= scan(THETA, start=0, stop=1, stride=0.3)
-  >>> two_th= scan(TWO_THETA, start=0, stop=2, stride=0.6)
+  >>> th= scan(theta, start=0, stop=1, stride=0.3)
+  >>> two_th= scan(two_theta, start=0, stop=2, stride=0.6)
   >>> (th& two_th).plot(frames=10)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.25 and two theta=0.50
@@ -273,8 +273,8 @@ Perform complex scans
   On the other hand, if the user is unsure about the proper sample
   alignment, they may want to investigate theta and two-theta separately
 
-  >>> th = scan(THETA, start=0, stop=1, stride=0.5)
-  >>> two_th = scan(TWO_THETA, start=0, stop=3, stride=1.0)
+  >>> th = scan(theta, start=0, stop=1, stride=0.5)
+  >>> two_th = scan(two_theta, start=0, stop=3, stride=1.0)
   >>> (th * two_th).plot(frames=5)
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.00 and two theta=1.00
@@ -294,7 +294,7 @@ Perform complex scans
   performed twice and the results combined.  This can allow for
   iterative scanning to improve statistics.
 
-  >>> th = scan(THETA, start=0, stop=1, stride=0.5)
+  >>> th = scan(theta, start=0, stop=1, stride=0.5)
   >>> (th + th + th).plot(frames=5)
   Taking a count at theta=0.00 and two theta=3.00
   Taking a count at theta=0.50 and two theta=3.00
@@ -327,7 +327,7 @@ Perform complex scans
   For a more interactive experience, a scan be set to cycle forever,
   improving the statistics until the use manually kills the scan.
 
-  >>> scan(THETA, start=0, stop=1, stride=0.5).forever.fit(Gaussian, frames=5) #doctest: +SKIP
+  >>> scan(theta, start=0, stop=1, stride=0.5).forever.fit(Gaussian, frames=5) #doctest: +SKIP
 
 Estimate time
 -------------
@@ -345,11 +345,11 @@ Estimate time
   the point of completion is a simple convenience to prevent these
   user headaches.
 
-  >>> needed = scan(THETA, start=0, stop=2.0, step=0.6).calculate(hours=1, minutes=30)
+  >>> needed = scan(theta, start=0, stop=2.0, step=0.6).calculate(hours=1, minutes=30)
   >>> print(needed)
   21600
 
-  >>> needed = scan(THETA, start=0, stop=2.0, step=0.6).calculate(frames=1000, time=True) #doctest: +SKIP
+  >>> needed = scan(theta, start=0, stop=2.0, step=0.6).calculate(frames=1000, time=True) #doctest: +SKIP
   The run would finish at 2017-07-17 20:06:24.600802
   >>> print(needed) #doctest: +SKIP
   400.0
@@ -361,7 +361,7 @@ SPEC compatibility
   dscan from SPEC have been implemented on top of the scanning
   interface.
 
-  >>> ascan(THETA, 0, 2, 10, 1)
+  >>> ascan(theta, 0, 2, 10, 1)
   Taking a count at theta=0.00 and two theta=3.00
   Taking a count at theta=0.20 and two theta=3.00
   Taking a count at theta=0.40 and two theta=3.00
@@ -373,13 +373,13 @@ SPEC compatibility
   Taking a count at theta=1.60 and two theta=3.00
   Taking a count at theta=1.80 and two theta=3.00
   Taking a count at theta=2.00 and two theta=3.00
-  >>> THETA(0.5)
-  >>> dscan(THETA, -1, 1, 10, -0.1)
+  >>> theta(0.5)
+  >>> dscan(theta, -1, 1, 10, -0.1)
   Traceback (most recent call last):
       ...
   RuntimeError: Position -0.5 is below lower limit 0 of motor theta
-  >>> THETA(2.5)
-  >>> dscan(THETA, -1, 1, 10, -0.01)
+  >>> theta(2.5)
+  >>> dscan(theta, -1, 1, 10, -0.01)
   Taking a count at theta=1.50 and two theta=3.00
   Taking a count at theta=1.70 and two theta=3.00
   Taking a count at theta=1.90 and two theta=3.00
@@ -391,7 +391,7 @@ SPEC compatibility
   Taking a count at theta=3.10 and two theta=3.00
   Taking a count at theta=3.30 and two theta=3.00
   Taking a count at theta=3.50 and two theta=3.00
-  >>> THETA
+  >>> theta
   theta is at 2.5
 
 
