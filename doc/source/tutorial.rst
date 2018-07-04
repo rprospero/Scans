@@ -278,7 +278,7 @@ Perform Fits
   to refine that point.  The width of that neighbourhood is the
   parameter to PeakFit.
 
-  >>> fit = scan(theta, start=0, stop=2, count=11, fit=PeakFit(0.7), frames=5, save="peak.png")
+  >>> fit = scan(theta, start=0, stop=2, count=11, fit=PeakFit(0.3), frames=5, save="peak.png")
   Taking a count at theta=0.00 and two theta=0.00
   Taking a count at theta=0.20 and two theta=0.00
   Taking a count at theta=0.40 and two theta=0.00
@@ -296,6 +296,17 @@ Perform Fits
   .. figure:: ../../peak.png
      :alt: Fitting a peak
 
+  We don't always know the correct type of fit to perform before we
+  start our scan.  We can handle this by reloading our old scan and
+  performing new fits on it.
+
+  >>> from Scans.Scans import ReloadScan
+  >>> fit = ReloadScan("mock_scan_14.dat").fit(PeakFit(0.9), save="peak2.png")
+  >>> abs(fit["peak"] - 1.0) < 0.1
+  True
+
+  .. figure:: ../../peak2.png
+     :alt: Fitting a peak
 
 Perform complex scans
 ---------------------

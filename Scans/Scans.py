@@ -44,7 +44,7 @@ def merge_dicts(x, y):
 
 
 def _plot_range(array):
-    if not array:
+    if len(array) < 2:
         return (-0.05, 0.05)
     # array = [float(x) for x in array]
     low = array.min()
@@ -531,3 +531,55 @@ class ForeverScan(Scan):  # pragma: no cover
 
     def max(self):
         return self.scan.max()
+
+class ReloadScan(Scan):
+    """The data from an old scan, pretending to be a new scan."""
+    def __init__(self, data_file, xs=None, ys=None):
+        if xs and ys:
+            self._xs = xs
+            self._ys = ys
+        else:
+            data = np.loadtxt(data_file)
+            self._xs = data[:, 0]
+            self._ys = data[:, 1]
+
+    def plot(self, detector=None, save=None,
+             action=None, **kwargs):
+        """Shim plot to reload old data."""
+        import warnings
+        warnings.simplefilter("ignore", UserWarning)
+
+        axis = NBPlot()
+
+        xs = self._xs
+        ys = ListOfMonoids()
+        for y in self._ys:
+            ys.append(Average(y))
+
+        rng = _plot_range(xs)
+        axis.set_xlim(*list(rng))
+        rng = _plot_range(ys)
+        axis.set_ylim(*list(rng))
+        ys.plot(axis, xs)
+
+        if action:
+            result = action(xs, ys, axis)
+        else:
+            result = None
+
+        if save:
+            axis.savefig(save)
+
+        return result
+
+    def map(self, func):
+        return ReloadScan(None, map(func, self._xs), self._ys)
+
+    def min(self):
+        return min(self._xs)
+
+    def max(self):
+        return max(self._xs)
+
+    def reverse(self):
+        return ReloadScan(None, self._xs[::-1], self._ys[::-1])
